@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Api\PlantConroller;
+use App\Http\Controllers\Api\Plants;
 use App\Http\Controllers\ControllerRegister;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -14,6 +16,9 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+
+
+Route::apiResource('plants', PlantConroller::class);
 
 Route::post('register', [ControllerRegister::class, 'register'])->name('register');
 Route::post('login', [ControllerRegister::class, 'login'])->name('login');
