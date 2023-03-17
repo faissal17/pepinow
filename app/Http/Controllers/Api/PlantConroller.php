@@ -40,7 +40,6 @@ class PlantConroller extends Controller
         $file->move('uploads/plants/', $filename);
 
 
-        // return response()->json(["message" => $request->file('image')]);
         $plant = Plant::create([
             'name' => $request->name,
             'description' => $request->description,
