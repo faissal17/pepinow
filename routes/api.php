@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\PlantConroller;
-use App\Http\Controllers\Api\Plants;
+use App\Http\Controllers\Api\plants;
 use App\Http\Controllers\ControllerRegister;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -18,7 +18,8 @@ use Illuminate\Support\Facades\Route;
 */
 
 
-Route::apiResource('plants', PlantConroller::class);
+Route::apiResource('plants', PlantConroller::class)->except(['update']);
+Route::put('plants/{plant}',[PlantConroller::class, 'update']);
 
 Route::post('register', [ControllerRegister::class, 'register'])->name('register');
 Route::post('login', [ControllerRegister::class, 'login'])->name('login');

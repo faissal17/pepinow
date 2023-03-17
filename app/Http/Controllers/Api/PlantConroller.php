@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\PlantResource;
 use App\Models\Plant;
 use Illuminate\Http\Request;
+use Spatie\Backtrace\File;
 
 class PlantConroller extends Controller
 {
@@ -65,7 +66,25 @@ class PlantConroller extends Controller
      */
     public function update(Request $request, Plant $plant)
     {
-        //
+        // dd();
+
+
+        $plant = Plant::find($plant->id);
+
+        $file = $request->file('image');
+        $filename = time() . '.' . $file->getClientOriginalExtension();
+        $file->move('uploads/plants/', $filename);
+
+        $plant->update([
+            'name' => $request->name,
+            'description' => $request->description,
+            'price' => $request->price,
+            'image' => $filename,
+            'categorie_id' => $request->categorie_id,
+            'vendeur_id' => $request->vendeur_id,
+        ]);
+
+        return response()->json(["message" => "success", "Plant" => $plant]);
     }
 
     /**
@@ -73,6 +92,10 @@ class PlantConroller extends Controller
      */
     public function destroy(Plant $plant)
     {
-        //
+        // $plant = Plant::find($plant->id);
+
+        $plant->delete();
+
+        return response()->json(["message" => "success", "Plant" => $plant]);
     }
 }
