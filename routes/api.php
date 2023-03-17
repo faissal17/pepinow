@@ -17,9 +17,16 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+// Plants api
 
 Route::apiResource('plants', PlantConroller::class)->except(['update']);
-Route::put('plants/{plant}',[PlantConroller::class, 'update']);
+Route::put('plants/{plant}', [PlantConroller::class, 'update']);
+
+// categorie api
+
+
+Route::apiResource('categorie', PlantConroller::class)->except(['update']);
+// Route::put('categorie/{categorie}', [PlantConroller::class, 'update']);
 
 Route::post('register', [ControllerRegister::class, 'register'])->name('register');
 Route::post('login', [ControllerRegister::class, 'login'])->name('login');
