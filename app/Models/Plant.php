@@ -16,4 +16,9 @@ class Plant extends Model
         'image',
         'categorie_id',
     ];
+
+    public function categorie()
+    {
+        return $this->belongsTo(categorie::class, 'categorie_id');
+    }
 }
