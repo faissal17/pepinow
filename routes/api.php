@@ -1,7 +1,8 @@
 <?php
 
+use App\Http\Controllers\API\CategorieController;
 use App\Http\Controllers\Api\PlantConroller;
-use App\Http\Controllers\Api\plants;
+use App\Http\Controllers\Api\plant;
 use App\Http\Controllers\ControllerRegister;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -25,7 +26,7 @@ Route::put('plants/{plant}', [PlantConroller::class, 'update']);
 // categorie api
 
 
-Route::apiResource('categorie', PlantConroller::class)->except(['update']);
+Route::apiResource('categorie', CategorieController::class);
 // Route::put('categorie/{categorie}', [PlantConroller::class, 'update']);
 
 Route::post('register', [ControllerRegister::class, 'register'])->name('register');

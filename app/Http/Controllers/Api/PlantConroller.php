@@ -31,8 +31,6 @@ class PlantConroller extends Controller
             'price' => 'required|numeric',
             'image' => 'required|image|max:1024',
             'categorie_id' => 'required|integer|max:255',
-            'vendeur_id' => 'required|integer|max:255',
-
         ]);
 
 
@@ -47,7 +45,6 @@ class PlantConroller extends Controller
             'price' => $request->price,
             'image' => $filename,
             'categorie_id' => $request->categorie_id,
-            'vendeur_id' => $request->vendeur_id,
         ]);
 
         return new PlantResource($plant);
@@ -81,7 +78,6 @@ class PlantConroller extends Controller
             'price' => $request->price,
             'image' => $filename,
             'categorie_id' => $request->categorie_id,
-            'vendeur_id' => $request->vendeur_id,
         ]);
 
         return response()->json(["message" => "success", "Plant" => $plant]);

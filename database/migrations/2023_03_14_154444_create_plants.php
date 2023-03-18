@@ -18,7 +18,6 @@ return new class extends Migration
             $table->float('price');
             $table->string('image');
             $table->foreignId('categorie_id');
-            $table->foreignId('vendeur_id');
             $table->timestamps();
         });
     }

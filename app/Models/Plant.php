@@ -15,6 +15,5 @@ class Plant extends Model
         'price',
         'image',
         'categorie_id',
-        'vendeur_id',
     ];
 }

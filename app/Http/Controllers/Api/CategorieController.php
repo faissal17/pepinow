@@ -25,14 +25,12 @@ class CategorieController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'required|string',
-            'vendeur_id' => 'required|integer|max:255',
 
         ]);
 
         $Categorie = Categorie::create([
             'name' => $request->name,
             'description' => $request->description,
-            'vendeur_id' => $request->vendeur_id,
         ]);
 
         return new CategorieResource($Categorie);
@@ -58,7 +56,6 @@ class CategorieController extends Controller
         $Categorie->update([
             'name' => $request->name,
             'description' => $request->description,
-            'vendeur_id' => $request->vendeur_id,
         ]);
 
         return response()->json(["message" => "success", "Categorie" => $Categorie]);
