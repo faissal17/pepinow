@@ -2,13 +2,22 @@
 
 namespace Database\Seeders;
 
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\PermissionRegistrar;
+use App\Models\User;
+use Illuminate\Support\Str;
 
-class PermissionsTableSeeder extends Seeder
+
+class PermissionsSeeder extends Seeder
 {
+    /**
+     * Run the database seeds.
+     *
+     * @return void
+     */
     public function run()
     {
         // Create Permissions
@@ -18,10 +27,10 @@ class PermissionsTableSeeder extends Seeder
         Permission::create(['name' => 'edit categorie']);
         Permission::create(['name' => 'delete categorie']);
 
-        Permission::create(['name' => 'view plants']);
-        Permission::create(['name' => 'create plants']);
-        Permission::create(['name' => 'edit plants']);
-        Permission::create(['name' => 'delete plants']);
+        Permission::create(['name' => 'view plant']);
+        Permission::create(['name' => 'create plant']);
+        Permission::create(['name' => 'edit plant']);
+        Permission::create(['name' => 'delete plant']);
 
         Permission::create(['name' => 'view users']);
         Permission::create(['name' => 'create users']);
@@ -37,8 +46,8 @@ class PermissionsTableSeeder extends Seeder
         $adminRole->syncPermissions(Permission::all());
         $vendeurRole->syncPermissions([
             'view categorie', 'create categorie', 'edit categorie', 'delete categorie',
-            'view plants', 'create plants', 'edit plants', 'delete plants',
+            'view plant', 'create plant', 'edit plant', 'delete plant',
         ]);
-        $userRole->syncPermissions(['view plants',]);
+        $userRole->syncPermissions(['view categorie', 'view plant',]);
     }
 }

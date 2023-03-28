@@ -15,39 +15,51 @@ class PlantConroller extends Controller
      */
     public function index()
     {
-        return Plant::all();
+        $user = auth()->user();
+        //return $user->rolesName();
+        if ($user->hasAnyRole(['admin', 'vendeur', 'user'])) { // return plant::all();
+            $plant = plant::get();
+            return response()->json([
+                'status' => 'success',
+                'result' => $plant
+            ], 200);
+        } else {
+            abort(403);
+        }
     }
 
     /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-
     {
-        // return $request;
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'required|string',
-            'price' => 'required|numeric',
-            'image' => 'required|image|max:1024',
-            'categorie_id' => 'required|integer|max:255',
-        ]);
+        $user = auth()->user();
+        if ($user->hasAnyRole(['admin', 'vebdeur'])) {
+            $request->validate([
+                'name' => 'required|string|max:255',
+                'description' => 'required|string',
+                'price' => 'required|numeric',
+                'image' => 'required|image',
+                'category_id' => 'required|integer|max:255',
+            ]);
 
 
-        $file = $request->file('image');
-        $filename = time() . '.' . $file->getClientOriginalExtension();
-        $file->move('uploads/plants/', $filename);
+            $file = $request->file('image');
+            $filename = time() . '.' . $file->getClientOriginalExtension();
+            $file->move('uploads/plants/', $filename);
 
 
-        $plant = Plant::create([
-            'name' => $request->name,
-            'description' => $request->description,
-            'price' => $request->price,
-            'image' => $filename,
-            'categorie_id' => $request->categorie_id,
-        ]);
-
-        return new PlantResource($plant);
+            $plant = Plant::create([
+                'name' => $request->name,
+                'description' => $request->description,
+                'price' => $request->price,
+                'image' => $filename,
+                'category_id' => $request->category_id,
+            ]);
+            return new PlantResource($plant);
+        } else {
+            abort(403);
+        }
     }
 
     /**
@@ -55,7 +67,12 @@ class PlantConroller extends Controller
      */
     public function show(Plant $plant)
     {
-        return new PlantResource($plant);
+        $user = auth()->user();
+        if ($user->hasAnyRole(['admin', 'vendeur', 'suer'])) {
+            return new PlantResource($plant);
+        } else {
+            abort(403);
+        }
     }
 
     /**
@@ -63,24 +80,28 @@ class PlantConroller extends Controller
      */
     public function update(Request $request, Plant $plant)
     {
-        // dd();
 
+        $user = auth()->user();
+        if ($user->hasAnyRole(['admin', 'vendeur'])) {
 
-        $plant = Plant::find($plant->id);
+            $plant = Plant::find($plant->id);
 
-        $file = $request->file('image');
-        $filename = time() . '.' . $file->getClientOriginalExtension();
-        $file->move('uploads/plants/', $filename);
+            $file = $request->file('image');
+            $filename = time() . '.' . $file->getClientOriginalExtension();
+            $file->move('uploads/plants/', $filename);
 
-        $plant->update([
-            'name' => $request->name,
-            'description' => $request->description,
-            'price' => $request->price,
-            'image' => $filename,
-            'categorie_id' => $request->categorie_id,
-        ]);
+            $plant->update([
+                'name' => $request->name,
+                'description' => $request->description,
+                'price' => $request->price,
+                'image' => $filename,
+                'category_id' => $request->category_id,
+            ]);
 
-        return response()->json(["message" => "success", "Plant" => $plant]);
+            return response()->json(["message" => "success", "Plant" => $plant]);
+        } else {
+            abort(403);
+        }
     }
 
     /**
@@ -90,8 +111,13 @@ class PlantConroller extends Controller
     {
         // $plant = Plant::find($plant->id);
 
-        $plant->delete();
+        $user = auth()->user();
+        if ($user->hasAnyRole(['admin', 'vendeur'])) {
+            $plant->delete();
 
-        return response()->json(["message" => "success", "Plant" => $plant]);
+            return response()->json(["message" => "success", "Plant" => $plant]);
+        } else {
+            abort(403);
+        }
     }
 }

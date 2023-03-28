@@ -14,11 +14,11 @@ class Plant extends Model
         'description',
         'price',
         'image',
-        'categorie_id',
+        'category_id',
     ];
 
-    public function categorie()
+    public function category()
     {
-        return $this->belongsTo(categorie::class, 'categorie_id');
+        return $this->belongsTo(Category::class);
     }
 }

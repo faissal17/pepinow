@@ -2,17 +2,28 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Models\Categorie;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\CategorieResource;
+use App\Http\Resources\CategoryResource;
+use Spatie\Permission\Models\Role;
 
 class CategorieController extends Controller
 {
     public function index()
     {
-        return Categorie::all();
-        // return 1;
+        $user = auth()->user();
+        //return $user->rolesName();
+        if ($user->hasAnyRole(['admin', 'vendeur', 'user'])) { // return category::all();
+            // get all Category and songs associated with to each category
+            $Category = Category::with('plants')->get();
+            return response()->json([
+                'status' => 'success',
+                'result' => $Category
+            ], 200);
+        } else {
+            abort(403);
+        }
     }
 
     /**
@@ -21,58 +32,77 @@ class CategorieController extends Controller
     public function store(Request $request)
 
     {
-        // return $request;
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'required|string',
-            'vendeur_id' => 'required|integer',
+        $user = auth()->user();
+        if ($user->hasAnyRole(['admin'])) {
+            $request->validate([
+                'name' => 'required|string|max:255',
+                'description' => 'required|string',
+                'vendeur_id' => 'required|integer',
 
-        ]);
+            ]);
 
-        $Categorie = Categorie::create([
-            'name' => $request->name,
-            'description' => $request->description,
-            'vendeur_id' => $request->vendeur_id,
-        ]);
+            $Category = Category::create([
+                'name' => $request->name,
+                'description' => $request->description,
+                'vendeur_id' => $request->vendeur_id,
+            ]);
 
-        return new CategorieResource($Categorie);
+            return new CategoryResource($Category);
+        } else {
+            abort(403);
+        }
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Categorie $Categorie)
+    public function show(Category $Category)
     {
-        return new CategorieResource($Categorie);
+        $user = auth()->user();
+        if ($user->hasAnyRole(['admin', 'vendeur', 'user'])) {
+            return new CategoryResource($Category);
+        } else {
+            abort(403);
+        }
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Categorie $Categorie)
+    public function update(Request $request, Category $Category)
     {
         // dd();
 
-        $Categorie = Categorie::find($Categorie->id);
+        $Category = Category::find($Category->id);
 
-        $Categorie->update([
-            'name' => $request->name,
-            'description' => $request->description,
-            'vendeur_id' => $request->vendeur_id,
-        ]);
+        $user = auth()->user();
+        if ($user->hasAnyRole(['admin'])) {
 
-        return response()->json(["message" => "success", "Categorie" => $Categorie]);
+            $Category->update([
+                'name' => $request->name,
+                'description' => $request->description,
+                'vendeur_id' => $request->vendeur_id,
+            ]);
+
+            return response()->json(["message" => "success", "Category" => $Category]);
+        } else {
+            abort(403);
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Categorie $Categorie)
+    public function destroy(Category $Category)
     {
-        // $Categorie = Categorie::find($Categorie->id);
+        // $Category = Category::find($Category->id);
 
-        $Categorie->delete();
-
-        return response()->json(["message" => "success", "Categorie" => $Categorie]);
+        $user = auth()->user();
+        if ($user->hasAnyRole(['admin'])) {
+            $Category->delete();
+            return response()->json(["message" => "success", "Category" => $Category]);
+        } else {
+            abort(403);
+        }
     }
 }

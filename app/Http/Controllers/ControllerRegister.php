@@ -22,7 +22,7 @@ class ControllerRegister extends Controller
         $user->name = $request->name;
         $user->email = $request->email;
         $user->password = Hash::make($request->password);
-
+        $user->assignRole('user');
         $user->save();
     }
     public function login(Request $request)
